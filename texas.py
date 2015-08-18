@@ -7,8 +7,8 @@ HAND_RANK = {
     'pair': 1,
     'two-pairs': 2,
     'three-of-kind': 3,
-    'flush': 5,
     'straight': 4,
+    'flush': 5,
     'full_house': 6,
     'four_of_kind': 7,
     'straight_flush': 8,
@@ -104,6 +104,9 @@ class Hand:
                 suits[card.suit].append(card)
         for suit in suits:
             if len(suits[suit]) >= 5:
+                if len(suits[suit]) > 5:
+                    while len(suits[suit]) > 5:
+                        suits[suit].remove(min(suits[suit], key=lambda x: x.high))
                 return suits[suit], rank
         return False, rank
 
@@ -195,8 +198,7 @@ class Hand:
     def royal_flush(self):
         rank = HAND_RANK['royal_flush']
         sf, sf_rank = self.straight_flush()
-
-        if sf and sf[-1].is_ace:
+        if sf and sf[-1].is_ace():
             return sf, rank
         return False, rank
 

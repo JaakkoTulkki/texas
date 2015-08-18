@@ -99,6 +99,22 @@ class TestHands(unittest.TestCase):
         play, hand_rank = player.play(g)
         self.assertEqual(hand_rank, 4)
 
+    def test_flush(self):
+        cards = [self.get_card(suit, value) for suit, value in [['s', 12], ['s', 13], ['h', 4], ['h', 11], ['s', 6]]]
+        g = Game(cards, blinds=3)
+        player_hand = [self.get_card(suit, value) for suit, value in [['s', 7], ['s', 2]]]
+        player = Hand(player_hand)
+        play, hand_rank = player.play(g)
+        self.assertEqual(hand_rank, 5)
+
+    def test_full_house(self):
+        cards = [self.get_card(suit, value) for suit, value in [['s', 12], ['s', 13], ['h', 12], ['h', 13], ['s', 6]]]
+        g = Game(cards, blinds=3)
+        player_hand = [self.get_card(suit, value) for suit, value in [['c', 12], ['s', 2]]]
+        player = Hand(player_hand)
+        play, hand_rank = player.play(g)
+        self.assertEqual(hand_rank, 6)
+
     def test_four_of_kind(self):
         cards = copy.deepcopy(self.cards)
         cards[0] = self.get_card('c', 11)
@@ -108,20 +124,18 @@ class TestHands(unittest.TestCase):
         play, hand_rank = player.play(g)
         self.assertEqual(hand_rank, 7)
 
+    def test_straight_flush(self):
+        cards = [self.get_card(suit, value) for suit, value in [['s', 12], ['s', 13], ['s', 11], ['s', 10], ['s', 9]]]
+        g = Game(cards, blinds=3)
+        player_hand = [self.get_card(suit, value) for suit, value in [['c', 12], ['s', 2]]]
+        player = Hand(player_hand)
+        play, hand_rank = player.play(g)
+        self.assertEqual(hand_rank, 8)
 
-
-
-
-# blind = 1
-# d = Deck()
-# h_one = Hand(d.hole_cards())
-# h_two = Hand(d.hole_cards())
-# h_three = Hand(d.hole_cards())
-# g = Game(d.flop(), blinds=blind*3)
-# g.turn(d.turn())
-# g.river(d.river())
-# print("common cards", g)
-# print("own cards ", h_one)
-#
-# s = h_one.play(g)
-# print("{} - {}".format(s[1], [e.__str__() for e in s[0]]))
+    def test_royal_flush(self):
+        cards = [self.get_card(suit, value) for suit, value in [['s', 12], ['s', 13], ['s', 11], ['s', 10], ['s', 14]]]
+        g = Game(cards, blinds=3)
+        player_hand = [self.get_card(suit, value) for suit, value in [['c', 12], ['s', 2]]]
+        player = Hand(player_hand)
+        play, hand_rank = player.play(g)
+        self.assertEqual(hand_rank, 9)
